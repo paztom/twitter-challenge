@@ -1,0 +1,226 @@
+swagger: '2.0'
+info:
+  description: HSBC recruiting process code challenge API
+  version: 0.0.1-SNAPSHOT
+  title: Twitter challenge API
+  contact:
+    name: Tomasz Pazera
+    email: tomasz.pazera@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+host: localhost:8080
+basePath: /
+tags:
+- name: messages-controller
+  description: Messages Controller
+- name: users-controller
+  description: Users Controller
+paths:
+  /twitterchallenge/messages:
+    get:
+      tags:
+      - messages-controller
+      summary: Get list of all system messages
+      operationId: getAllMessagesUsingGET
+      produces:
+      - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Message List Response'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+    post:
+      tags:
+      - messages-controller
+      summary: Get list of all the users
+      operationId: addMessageUsingPOST
+      consumes:
+      - application/json
+      produces:
+      - '*/*'
+      parameters:
+      - in: body
+        name: messageDto
+        description: messageDto
+        required: true
+        schema:
+          $ref: '#/definitions/Message'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Message'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+  /twitterchallenge/messages/user/{userName}:
+    get:
+      tags:
+      - messages-controller
+      summary: Get list of all user messages
+      operationId: findMessagesByUserUsingGET
+      produces:
+      - '*/*'
+      parameters:
+      - name: userName
+        in: path
+        description: userName
+        required: true
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Message List Response'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+  /twitterchallenge/messages/wall/{userName}:
+    get:
+      tags:
+      - messages-controller
+      summary: Show all messages from followed users
+      operationId: getWallUsingGET
+      produces:
+      - '*/*'
+      parameters:
+      - name: userName
+        in: query
+        description: userName
+        required: false
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Message List Response'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+  /twitterchallenge/users:
+    get:
+      tags:
+      - users-controller
+      summary: Get list of all the users
+      operationId: getAllUsersUsingGET
+      produces:
+      - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+  /twitterchallenge/users/follow:
+    post:
+      tags:
+      - users-controller
+      summary: Follow the user
+      operationId: followUserUsingPOST
+      consumes:
+      - application/json
+      produces:
+      - '*/*'
+      parameters:
+      - in: body
+        name: followUserRequest
+        description: followUserRequest
+        required: true
+        schema:
+          $ref: '#/definitions/FollowUserRequest'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+definitions:
+  FollowUserRequest:
+    type: object
+    properties:
+      currentUser:
+        type: string
+        description: Follower userName
+      userToFollow:
+        type: string
+        description: User which followet wants to follow
+    title: FollowUserRequest
+    description: Model for follow user request
+  Message:
+    type: object
+    properties:
+      creationDate:
+        type: string
+        format: date-time
+      id:
+        type: integer
+        format: int32
+      title:
+        type: string
+      userName:
+        type: string
+      value:
+        type: string
+    title: Message
+    description: Represents single message
+  Message List Response:
+    type: object
+    properties:
+      messages:
+        type: array
+        items:
+          $ref: '#/definitions/Message'
+    title: Message List Response
+    description: Container for message list response
+  User:
+    type: object
+    properties:
+      userName:
+        type: string
+    title: User
+    description: Represents single user
+  User List Response:
+    type: object
+    properties:
+      users:
+        type: array
+        items:
+          $ref: '#/definitions/User'
+    title: User List Response
+    description: Container for user list response
